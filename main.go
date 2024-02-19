@@ -1,13 +1,27 @@
 package main
 
 import (
+    "fmt"
     "io"
+    "flag" // Allows handling named CLI parameters, easier to work with than os.Args
     "net"
     "log"
 )
 
 func main() {
-    server, err := net.Listen("tcp", ":1234")
+    var port int
+    var host string
+    var network string
+
+    flag.IntVar(&port, "port", 1234, "Provide a port number")
+    flag.StringVar(&host, "host", "", "Provide a directory")
+    flag.StringVar(&network, "network", "tcp", "Provide a directory")
+
+    flag.Parse()
+
+    fullHost := fmt.Sprintf("%v:%v", host, port)
+    server, err := net.Listen(network, fullHost)
+
     if err != nil {
         log.Fatal(err)
     }
